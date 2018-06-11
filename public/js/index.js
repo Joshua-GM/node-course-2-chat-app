@@ -7,10 +7,11 @@ socket.on('connect', function() {
 // 		text: "Hey. this is Jen"
 // 	});
 
-	socket.emit('createMessage', {
-		from: "joshua1234",
-		text: "Hey, are u on PUBG now?"
-	})
+// 	socket.emit('createMessage', {
+// 		from: "joshua1234",
+// 		text: "Hey, are u on PUBG now?"
+// 	})
+
 });
 
 socket.on('newMessage', function(message){

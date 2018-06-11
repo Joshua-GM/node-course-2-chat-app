@@ -17,17 +17,24 @@ io.on('connection', (socket)=>{
 	console.log('New user connected');
 
 
-	socket.on('createMessage', (createMessage)=>{
-		console.log('createMessage',createMessage);
+
+	socket.on('createMessage', (message)=>{
+		console.log('createMessage',message);
+		io.emit('newMessage', {
+			from: message.from,
+			text: message.text,
+			createdAt: new Date().getTime()
+		});
 	});
 
-	socket.emit('newMessage', {
-		from: "Jplogger1234",
-		text: "Nope. Out now",
-		createdAt: Date.now()
+	// socket.emit('newMessage', {
+	// 	from: "Jplogger1234",
+	// 	text: "Nope. Out now",
+	// 	createdAt: Date.now()
 
-	});
-	
+	// });
+
+
 	// socket.emit('newEmail', {
 	// 	from: "mike@example.com",
 	// 	text: "Hey. What is going on?",
