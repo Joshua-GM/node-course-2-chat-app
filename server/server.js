@@ -21,35 +21,14 @@ io.on('connection', (socket)=>{
 
 		socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
 
-	socket.on('createMessage', (message)=>{
+	socket.on('createMessage', (message, callback)=>{
 		console.log('createMessage',message);
 
 		io.emit('newMessage', generateMessage(message.from, message.text));
+
+		callback('This is from the server.');
 		
-		// socket.broadcast.emit('newMessage', {
-		// 	from: message.from,
-		// 	text: message.text,
-		// 	createdAt: new Date().getTime()
-		// });
 	});
-
-	// socket.emit('newMessage', {
-	// 	from: "Jplogger1234",
-	// 	text: "Nope. Out now",
-	// 	createdAt: Date.now()
-
-	// });
-
-
-	// socket.emit('newEmail', {
-	// 	from: "mike@example.com",
-	// 	text: "Hey. What is going on?",
-	// 	createAt: 123
-	// });
-
-	// socket.on('createEmail', (newEmail)=>{
-	// 	console.log('createEmail', newEmail);
-	// });
 
 	socket.on('disconnect', (socket)=>{
 		console.log('Disconnected from server');
