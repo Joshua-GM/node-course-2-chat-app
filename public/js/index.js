@@ -33,9 +33,9 @@ socket.on('newLocationMessage', function(message){
 jQuery("#username-form").on('submit', function(e){
 	e.preventDefault();
 	user = jQuery('[name=username').val();
-	let useradd=`User: ${user}`;
+	let useradd=`<strong>${user}</strong>`;
 	jQuery("#username-form").hide();
-	jQuery("#user").text(useradd);
+	jQuery("#user").append(useradd);
 	jQuery('#message-form, #user').show();
 
 });
@@ -43,11 +43,13 @@ jQuery("#username-form").on('submit', function(e){
 jQuery('#message-form').on('submit', function(e){
 	e.preventDefault();
 
+	let messageTextBox = jQuery('[name=message]');
+
 	socket.emit('createMessage', {
 		from: user,
-		text: jQuery('[name=message]').val()
+		text: messageTextBox.val()
 	}, function() {
-
+		messageTextBox.val('');
 	});
 });
 
@@ -56,13 +58,20 @@ locationButton.on('click', function(){
 	if (!navigator.geolocation) {
 		return alert('Not supported by your browser!');
 	}
-	navigator.geolocation.getCurrentPosition(function(position){
+
+	locationButton.attr('disabled', 'disabled').text('Sending location..');
+	
+	navigator.geolocation.getCurrentPosition(function(
+		position){
+		locationButton.removeAttr('disabled').text('Send location');
+		
 		socket.emit('createLocationMessage', {
 			latitude: position.coords.latitude,
 			longitude: position.coords.longitude
 		});
 
 	}, function(){
+		locationButton.removeAttr('disabled').text('Send location');
 		alert('Unable to fetch location!');
 	});
 });
