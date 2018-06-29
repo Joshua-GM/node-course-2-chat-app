@@ -1,5 +1,4 @@
 const socket = io();
-let user;
 
 function scrollToBottom() {
 	// selectors
@@ -17,8 +16,6 @@ function scrollToBottom() {
 	}
 
 }
-
-jQuery('#message-form, #user').hide();
 
 socket.on('connect', function() {
 	console.log('Connected to server');
@@ -50,26 +47,11 @@ socket.on('newLocationMessage', function(message){
 		createdAt: formattedTime
 	});
 
-	// var li = jQuery('<li></li>');
-	// var a = jQuery('<a target="_blank">My Current Location</a>');
-
-	// li.text(`${message.from} ${formattedTime}: `);
-	// a.attr('href', message.url);
-	// li.append(a);
 
 	jQuery('#messages').append(html);
 	scrollToBottom();
 });
 
-jQuery("#username-form").on('submit', function(e){
-	e.preventDefault();
-	user = jQuery('[name=username').val();
-	let useradd=`<strong>${user}</strong>`;
-	jQuery("#username-form").hide();
-	jQuery("#user").append(useradd);
-	jQuery('#message-form, #user').show();
-
-});
 
 jQuery('#message-form').on('submit', function(e){
 	e.preventDefault();
@@ -77,7 +59,7 @@ jQuery('#message-form').on('submit', function(e){
 	let messageTextBox = jQuery('[name=message]');
 
 	socket.emit('createMessage', {
-		from: user,
+		from: 'User',
 		text: messageTextBox.val()
 	}, function() {
 		messageTextBox.val('');
