@@ -4,7 +4,7 @@ const express = require('express');
 const socketIO = require('socket.io');
 
 const {generateMessage, generateLocationMessage} = require('./utils/message');
-const {isRealString} = require('./utils/validation');
+const {isRealString,isNameExist} = require('./utils/validation');
 const {Users} = require('./utils/users');
 
 const app = express();
@@ -20,12 +20,28 @@ app.use(express.static(publicPath));
 io.on('connection', (socket)=>{
 	console.log('New user connected');
 
-
+	//first time will be empty array as it hasn't approached addUser method below
+	// only subsequent connection will have the data
+	// need to look at sending the info back to index.html
+	let userlist = users.users;
+	let userRooms = [];
+	if (userlist.length != 0) {
+		userlist.forEach((user)=>{
+			userRooms.indexOf(user.room) === -1 ? userRooms.push(user.room) : '';
+		});		
+	}
 
 	socket.on('join', (params, callback)=>{
 		if ( !isRealString(params.name) || ( !isRealString(params.room))) {
 			return callback('Name and room name are required');
 		}
+
+		let user = users.getUserList(params.room)[0];
+
+		if (user !== undefined && isNameExist(params.name, user)) {
+			return callback('Name already exist!');
+		}
+
 		socket.join(params.room);
 		users.removeUser(socket.id);
 		users.addUser(socket.id, params.name, params.room);
