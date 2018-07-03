@@ -23,12 +23,14 @@ io.on('connection', (socket)=>{
 	//first time will be empty array as it hasn't approached addUser method below
 	// only subsequent connection will have the data
 	// need to look at sending the info back to index.html
+
 	let userlist = users.users;
 	let userRooms = [];
 	if (userlist.length != 0) {
 		userlist.forEach((user)=>{
 			userRooms.indexOf(user.room) === -1 ? userRooms.push(user.room) : '';
-		});		
+		});
+		socket.emit('newRoomList', userRooms);	
 	}
 
 	socket.on('join', (params, callback)=>{
